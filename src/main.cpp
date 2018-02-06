@@ -18,11 +18,15 @@ struct Node
     bool visited = false;
 };
 
+bool indexIsValid(int i, int j)
+{
+    if (i < 0 || i >= gridWidth) return false;
+    if (j < 0 || j >= gridHeight) return false;
+    return true;
+}
+
 int getNext_i(int current_i, int side)
 {
-    if ((side == side_right && current_i == gridWidth - 1) || (side == side_left && current_i == 0))
-        return -1;
-
     int delta_i = 0;
     if (side == side_right)
         delta_i++;
@@ -48,7 +52,7 @@ void setWall(Node nodeList[], int i, int j, int side, bool state)
 {
     int next_i = getNext_i(i, side);
     int next_j = getNext_j(j, side);
-    if (next_i == -1 || next_j == -1) return;
+    if (!indexIsValid(next_i, next_j)) return;
 
     nodeList[i + j * gridWidth].walls[side] = state;
     int oppositeSide = (side + 2) % 4;
@@ -135,7 +139,7 @@ bool hasUnvisitedNeighbor(Node nodeList[], int i, int j)
     {
         int next_i = getNext_i(i, side);
         int next_j = getNext_j(j, side);
-        if (next_i == -1 || next_j == -1) continue;
+        if (!indexIsValid(next_i, next_j)) continue;
         if (!nodeList[next_i + next_j * gridWidth].visited)
             return true;
     }
@@ -187,7 +191,7 @@ int main()
                     nextSide = rand() % 4;
                     next_i = getNext_i(current_i, nextSide);
                     next_j = getNext_j(current_j, nextSide);
-                } while (next_i == -1 || next_j == -1 ||
+                } while (!indexIsValid(next_i, next_j) ||
                         nodeList[next_i + next_j * gridWidth].visited);
                 nodeStack_i.push(current_i);
                 nodeStack_j.push(current_j);
