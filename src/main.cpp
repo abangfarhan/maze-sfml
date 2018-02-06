@@ -1,3 +1,5 @@
+/* Generate maze using backtracking algorithm */
+
 #include <iostream>
 #include <stack>
 #include <time.h>
