@@ -8,8 +8,8 @@
 #define side_left 2
 #define side_top 3
 
-const int gridWidth = 40;
-const int gridHeight = 20;
+const int gridWidth = 80;
+const int gridHeight = 40;
 
 struct Node
 {
@@ -29,7 +29,7 @@ bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
 int main()
 {
     srand(time(NULL));
-    const int nodeSizePx = 25;
+    const int nodeSizePx = 10;
     const int screenWidth = gridWidth * nodeSizePx;
     const int screenHeight = gridHeight * nodeSizePx;
 
@@ -145,7 +145,7 @@ void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeS
         cell.setSize(sf::Vector2f(innerNodeSizePx, innerNodeSizePx));
         cell.setFillColor(sf::Color::Black);
         if (isCurrent)
-            cell.setFillColor(sf::Color::Blue);
+            cell.setFillColor(sf::Color::Red);
 
         sf::RectangleShape wall;
         wall.setFillColor(sf::Color::Black);
