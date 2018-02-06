@@ -22,7 +22,7 @@ bool indexIsValid(int i, int j);
 int getNext_i(int current_i, int side);
 int getNext_j(int current_j, int side);
 void setWall(Node nodeList[], int i, int j, int side, bool state);
-void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx, bool isCurrent = false);
+void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false);
 bool hasUnvisitedNodes(Node nodeList[]);
 bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
 
@@ -81,7 +81,7 @@ int main()
 
         for (int i = 0; i < gridWidth; ++i)
             for (int j = 0; j < gridHeight; ++j)
-                drawNode(&window, nodeList[i + j * gridWidth], i, j, nodeSizePx,
+                drawNode(&window, nodeList, i, j, nodeSizePx,
                         (i == current_i && j == current_j));
 
         // sf::sleep(sf::milliseconds(100));
@@ -131,9 +131,10 @@ void setWall(Node nodeList[], int i, int j, int side, bool state)
     nodeList[next_i + next_j * gridWidth].walls[oppositeSide] = state;
 }
 
-void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx, bool isCurrent)
+void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent)
 {
-    if (!(node.walls[0] && node.walls[1] && node.walls[2] && node.walls[3]))
+    Node* node = &(nodeList[i + j * gridWidth]);
+    if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))
     {
         float scale = 0.6;
         float innerNodeSizePx = nodeSizePx * scale;
@@ -148,25 +149,25 @@ void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx,
 
         sf::RectangleShape wall;
         wall.setFillColor(sf::Color::Black);
-        if (!node.walls[side_right])
+        if (!node->walls[side_right])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness + innerNodeSizePx, j * nodeSizePx + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window->draw(wall);
         }
-        if (!node.walls[side_left])
+        if (!node->walls[side_left])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx, j * nodeSizePx + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window->draw(wall);
         }
-        if (!node.walls[side_top])
+        if (!node->walls[side_top])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window->draw(wall);
         }
-        if (!node.walls[side_down])
+        if (!node->walls[side_down])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness + innerNodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
