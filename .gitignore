@@ -1,0 +1,7 @@
+build/*
+bin/*
+tags
+test.*
+*.swp
+taghl_config.txt
+types_c.taghl
