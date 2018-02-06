@@ -18,6 +18,78 @@ struct Node
     bool visited = false;
 };
 
+bool indexIsValid(int i, int j);
+int getNext_i(int current_i, int side);
+int getNext_j(int current_j, int side);
+void setWall(Node nodeList[], int i, int j, int side, bool state);
+void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx, bool isCurrent = false);
+bool hasUnvisitedNodes(Node nodeList[]);
+bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
+
+int main()
+{
+    srand(time(NULL));
+    const int nodeSizePx = 25;
+    const int screenWidth = gridWidth * nodeSizePx;
+    const int screenHeight = gridHeight * nodeSizePx;
+
+    Node nodeList[gridWidth * gridHeight];
+
+    int current_i = 0, current_j = 0;
+    nodeList[current_i + current_j * gridWidth].visited = true;
+    std::stack<int> nodeStack_i;
+    std::stack<int> nodeStack_j;
+
+    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Maze");
+    while(window.isOpen())
+    {
+        sf::Event event;
+        while(window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear(sf::Color::White);
+
+        if (hasUnvisitedNodes(nodeList))
+        {
+            if (hasUnvisitedNeighbor(nodeList, current_i, current_j))
+            {
+                int nextSide;
+                int next_i, next_j;
+                do {
+                    nextSide = rand() % 4;
+                    next_i = getNext_i(current_i, nextSide);
+                    next_j = getNext_j(current_j, nextSide);
+                } while (!indexIsValid(next_i, next_j) ||
+                        nodeList[next_i + next_j * gridWidth].visited);
+                nodeStack_i.push(current_i);
+                nodeStack_j.push(current_j);
+                setWall(nodeList, current_i, current_j, nextSide, false);
+                current_i = next_i;
+                current_j = next_j;
+                nodeList[current_i + current_j * gridWidth].visited = true;
+            }
+            else
+            {
+                current_i = nodeStack_i.top();
+                current_j = nodeStack_j.top();
+                nodeStack_i.pop();
+                nodeStack_j.pop();
+            }
+        }
+
+        for (int i = 0; i < gridWidth; ++i)
+            for (int j = 0; j < gridHeight; ++j)
+                drawNode(&window, nodeList[i + j * gridWidth], i, j, nodeSizePx,
+                        (i == current_i && j == current_j));
+
+        // sf::sleep(sf::milliseconds(100));
+
+        window.display();
+    }
+}
+
 bool indexIsValid(int i, int j)
 {
     if (i < 0 || i >= gridWidth) return false;
@@ -57,29 +129,9 @@ void setWall(Node nodeList[], int i, int j, int side, bool state)
     nodeList[i + j * gridWidth].walls[side] = state;
     int oppositeSide = (side + 2) % 4;
     nodeList[next_i + next_j * gridWidth].walls[oppositeSide] = state;
-    // if ((side == side_right && i < gridWidth - 1) ||
-    //     (side == side_left  && i > 1) ||
-    //     (side == side_down  && j < gridHeight - 1) ||
-    //     (side == side_top   && j > 1))
-    // {
-    //     nodeList[i + j * gridWidth].walls[side] = state;
-    //     int oppositeSide = (side + 2) % 4;
-    //     switch(side)
-    //     {
-    //     case side_right:
-    //         i++; break;
-    //     case side_down:
-    //         j++; break;
-    //     case side_left:
-    //         i--; break;
-    //     case side_top:
-    //         j--; break;
-    //     }
-    //     nodeList[i + j * gridWidth].walls[oppositeSide] = state;
-    // }
 }
 
-void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx, bool isCurrent = false)
+void drawNode(sf::RenderWindow* window, Node node, int i, int j, int nodeSizePx, bool isCurrent)
 {
     if (!(node.walls[0] && node.walls[1] && node.walls[2] && node.walls[3]))
     {
@@ -144,78 +196,4 @@ bool hasUnvisitedNeighbor(Node nodeList[], int i, int j)
             return true;
     }
     return false;
-}
-
-int main()
-{
-    srand(time(NULL));
-    const int nodeSizePx = 25;
-    const int screenWidth = gridWidth * nodeSizePx;
-    const int screenHeight = gridHeight * nodeSizePx;
-
-    Node nodeList[gridWidth * gridHeight];
-
-    // setWall(nodeList, 18, 8, side_right, false);
-    // setWall(nodeList, 19, 9, side_top, false);
-
-    int current_i = 0, current_j = 0;
-    nodeList[current_i + current_j * gridWidth].visited = true;
-    std::stack<int> nodeStack_i;
-    std::stack<int> nodeStack_j;
-
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Maze");
-    while(window.isOpen())
-    {
-        sf::Event event;
-        while(window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        window.clear(sf::Color::White);
-        // for (int i = 0; i < gridWidth; ++i)
-        //     for (int j = 0; j < gridHeight; ++j)
-        //     {
-        //         for (int side = 0; side < 4; ++side)
-        //             if (rand() < RAND_MAX/4)
-        //                 setWall(nodeList, i, j, side, !nodeList[i + j * gridWidth].walls[side]);
-        //     }
-
-        if (hasUnvisitedNodes(nodeList))
-        {
-            if (hasUnvisitedNeighbor(nodeList, current_i, current_j))
-            {
-                int nextSide;
-                int next_i, next_j;
-                do {
-                    nextSide = rand() % 4;
-                    next_i = getNext_i(current_i, nextSide);
-                    next_j = getNext_j(current_j, nextSide);
-                } while (!indexIsValid(next_i, next_j) ||
-                        nodeList[next_i + next_j * gridWidth].visited);
-                nodeStack_i.push(current_i);
-                nodeStack_j.push(current_j);
-                setWall(nodeList, current_i, current_j, nextSide, false);
-                current_i = next_i;
-                current_j = next_j;
-                nodeList[current_i + current_j * gridWidth].visited = true;
-            }
-            else
-            {
-                current_i = nodeStack_i.top();
-                current_j = nodeStack_j.top();
-                nodeStack_i.pop();
-                nodeStack_j.pop();
-            }
-        }
-
-        for (int i = 0; i < gridWidth; ++i)
-            for (int j = 0; j < gridHeight; ++j)
-                drawNode(&window, nodeList[i + j * gridWidth], i, j, nodeSizePx,
-                        (i == current_i && j == current_j));
-
-        // sf::sleep(sf::milliseconds(100));
-
-        window.display();
-    }
 }
