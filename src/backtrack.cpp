@@ -51,7 +51,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        window.clear(sf::Color::White);
+        window.clear(sf::Color::Black);
 
         if (hasUnvisitedNodes(nodeList))
         {
@@ -111,9 +111,6 @@ int getNext_i(int current_i, int side)
 
 int getNext_j(int current_j, int side)
 {
-    if ((side == side_down && current_j == gridHeight - 1) || (side == side_top && current_j == 0))
-        return -1;
-
     int delta_j = 0;
     if (side == side_down)
         delta_j++;
@@ -145,12 +142,12 @@ void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeS
         sf::RectangleShape cell;
         cell.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness));
         cell.setSize(sf::Vector2f(innerNodeSizePx, innerNodeSizePx));
-        cell.setFillColor(sf::Color::Black);
+        cell.setFillColor(sf::Color::White);
         if (isCurrent)
             cell.setFillColor(sf::Color::Red);
 
         sf::RectangleShape wall;
-        wall.setFillColor(sf::Color::Black);
+        wall.setFillColor(sf::Color::White);
         if (!node->walls[side_right])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness + innerNodeSizePx, j * nodeSizePx + wallThickness));

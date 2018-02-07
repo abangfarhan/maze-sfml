@@ -12,12 +12,21 @@ SFML_LIB := -L "D:/Program Files (x86)/SFML/lib" \
 	-l freetype \
 	-l jpeg \
 
-bin/main: build/main.o
+backtrack: bin/backtrack
+
+bin/backtrack: build/backtrack.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
-build/main.o: src/main.cpp
+build/backtrack.o: src/backtrack.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
+kruskall: bin/kruskall
+
+bin/kruskall: build/kruskall.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
+
+build/kruskall.o: src/kruskall.cpp
+	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
 clean:
 	rm build/*.*
