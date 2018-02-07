@@ -17,6 +17,7 @@ struct Node {
     bool walls[4] = { true, true, true, true };
     int group;
 };
+#include "mazeHelper.h"
 
 struct Wall {
     bool available = true;
@@ -27,7 +28,6 @@ struct Wall {
 int getNext_i(int current_i, int side);
 int getNext_j(int current_j, int side);
 bool indexIsValid(int i, int j);
-void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false);
 void mergeGroup(Node nodeList[], int group1, int group2);
 int diff2side(int diff);
 void setWall(Node nodeList[], Node* node1, Node* node2, bool state);
@@ -85,13 +85,12 @@ int main()
                 setWall(nodeList, node1, node2, false);
                 mergeGroup(nodeList, node1->group, node2->group);
             }
-
             wallVec.erase(wallVec.begin() + rndWall);
         }
 
         for (int i = 0; i < gridWidth; ++i)
             for (int j = 0; j < gridHeight; ++j)
-                drawNode(&window, nodeList, i, j, nodeSizePx);
+                drawNode(window, nodeList, i, j, nodeSizePx);
 
         // sf::sleep(sf::milliseconds(100));
         window.display();
@@ -157,53 +156,6 @@ bool indexIsValid(int i, int j)
     if (i < 0 || i >= gridWidth) return false;
     if (j < 0 || j >= gridHeight) return false;
     return true;
-}
-
-void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent)
-{
-    Node* node = &(nodeList[i + j * gridWidth]);
-    if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))
-    {
-        float scale = 0.6;
-        float innerNodeSizePx = nodeSizePx * scale;
-        float wallThickness = (nodeSizePx - innerNodeSizePx) / 2;
-
-        sf::RectangleShape cell;
-        cell.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness));
-        cell.setSize(sf::Vector2f(innerNodeSizePx, innerNodeSizePx));
-        cell.setFillColor(sf::Color::White);
-        if (isCurrent)
-            cell.setFillColor(sf::Color::Red);
-
-        sf::RectangleShape wall;
-        wall.setFillColor(sf::Color::White);
-        if (!node->walls[side_right])
-        {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness + innerNodeSizePx, j * nodeSizePx + wallThickness));
-            wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
-            window->draw(wall);
-        }
-        if (!node->walls[side_left])
-        {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx, j * nodeSizePx + wallThickness));
-            wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
-            window->draw(wall);
-        }
-        if (!node->walls[side_top])
-        {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx));
-            wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
-            window->draw(wall);
-        }
-        if (!node->walls[side_down])
-        {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness + innerNodeSizePx));
-            wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
-            window->draw(wall);
-        }
-
-        window->draw(cell);
-    }
 }
 
 // void setWall(Node nodeList[], int i, int j, int side, bool state)
