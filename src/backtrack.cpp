@@ -37,7 +37,8 @@ int main()
 
     Node nodeList[gridWidth * gridHeight];
 
-    int current_i = 0, current_j = 0;
+    int current_i = rand() % gridWidth;
+    int current_j = rand() % gridHeight;
     nodeList[current_i + current_j * gridWidth].visited = true;
     std::stack<int> nodeStack_i;
     std::stack<int> nodeStack_j;
