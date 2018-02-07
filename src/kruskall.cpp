@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <time.h>
 #include <SFML/Graphics.hpp>
 
@@ -7,8 +8,8 @@
 #define side_left 2
 #define side_top 3
 
-const int gridWidth = 80;
-const int gridHeight = 40;
+const int gridWidth = 40;
+const int gridHeight = 20;
 const int n_walls = (gridWidth - 1) * gridHeight + gridWidth * (gridHeight - 1);
 
 struct Node {
@@ -30,18 +31,11 @@ void drawNode(sf::RenderWindow* window, Node nodeList[], int i, int j, int nodeS
 void mergeGroup(Node nodeList[], int group1, int group2);
 int diff2side(int diff);
 void setWall(Node nodeList[], Node* node1, Node* node2, bool state);
-bool wallsAvailable(Wall wallList[])
-{
-    for (int i = 0; i < n_walls; ++i)
-        if (wallList[i].available)
-            return true;
-    return false;
-}
 
 int main()
 {
     srand(time(NULL));
-    const int nodeSizePx = 10;
+    const int nodeSizePx = 20;
     const int screenWidth = gridWidth * nodeSizePx;
     const int screenHeight = gridHeight * nodeSizePx;
 
@@ -49,8 +43,7 @@ int main()
     for (int i = 0; i < gridWidth * gridHeight; ++i)
         nodeList[i].group = i;
 
-    int wall_iter = 0;
-    Wall wallList[n_walls];
+    std::vector<Wall> wallVec;
     for (int i = 0; i < gridWidth; ++i)
         for (int j = 0; j < gridHeight; ++j)
         {
@@ -65,8 +58,7 @@ int main()
                     Wall wall;
                     wall.node1 = node1;
                     wall.node2 = &(nodeList[next_i + next_j * gridWidth]);
-                    wallList[wall_iter] = wall;
-                    wall_iter++;
+                    wallVec.push_back(wall);
                 }
             }
         }
@@ -82,24 +74,19 @@ int main()
         }
         window.clear(sf::Color::Black);
 
-        if (wallsAvailable(wallList))
+        if (!wallVec.empty())
         {
-            int rndWall;
-            do { rndWall = rand() % n_walls; }
-            while (!wallList[rndWall].available);
-
-            Wall* wall = &(wallList[rndWall]);
+            int rndWall = rand() % wallVec.size();
+            Wall* wall = &(wallVec.at(rndWall));
             Node* node1 = wall->node1;
             Node* node2 = wall->node2;
             if (node1->group != node2->group)
             {
                 setWall(nodeList, node1, node2, false);
-
                 mergeGroup(nodeList, node1->group, node2->group);
             }
 
-            wallList[rndWall].available = false;
-
+            wallVec.erase(wallVec.begin() + rndWall);
         }
 
         for (int i = 0; i < gridWidth; ++i)
@@ -107,7 +94,6 @@ int main()
                 drawNode(&window, nodeList, i, j, nodeSizePx);
 
         // sf::sleep(sf::milliseconds(100));
-
         window.display();
     }
 }
