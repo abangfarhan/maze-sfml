@@ -85,6 +85,7 @@ int main()
                 setWall(nodeList, node1, node2, false);
                 mergeGroup(nodeList, node1->group, node2->group);
             }
+
             wallVec.erase(wallVec.begin() + rndWall);
         }
 
