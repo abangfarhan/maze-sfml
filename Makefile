@@ -17,7 +17,7 @@ backtrack: bin/backtrack
 bin/backtrack: build/backtrack.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
-build/backtrack.o: src/backtrack.cpp
+build/backtrack.o: src/backtrack.cpp include/mazeHelper.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
 kruskall: bin/kruskall
@@ -25,7 +25,7 @@ kruskall: bin/kruskall
 bin/kruskall: build/kruskall.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
-build/kruskall.o: src/kruskall.cpp
+build/kruskall.o: src/kruskall.cpp include/mazeHelper.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
 clean:
