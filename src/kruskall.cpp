@@ -20,7 +20,6 @@ struct Node {
 #include "mazeHelper.h"
 
 struct Wall {
-    bool available = true;
     Node* node1;
     Node* node2;
 };
