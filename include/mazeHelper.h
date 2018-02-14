@@ -1,3 +1,8 @@
+#define side_right 0
+#define side_down 1
+#define side_left 2
+#define side_top 3
+
 void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false)
 {
     Node* node = &(nodeList[i + j * gridWidth]);
@@ -13,6 +18,7 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeS
         cell.setFillColor(sf::Color::White);
         if (isCurrent)
             cell.setFillColor(sf::Color::Red);
+        window.draw(cell);
 
         sf::RectangleShape wall;
         wall.setFillColor(sf::Color::White);
@@ -40,7 +46,5 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeS
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
-
-        window.draw(cell);
     }
 }

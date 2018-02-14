@@ -3,11 +3,6 @@
 #include <time.h>
 #include <SFML/Graphics.hpp>
 
-#define side_right 0
-#define side_down 1
-#define side_left 2
-#define side_top 3
-
 const int gridWidth = 40;
 const int gridHeight = 20;
 const int n_walls = (gridWidth - 1) * gridHeight + gridWidth * (gridHeight - 1);
@@ -17,6 +12,7 @@ struct Node {
     bool walls[4] = { true, true, true, true };
     int group;
 };
+// FIXME mazeHelper.h require variables from here
 #include "mazeHelper.h"
 
 struct Wall {
