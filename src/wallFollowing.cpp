@@ -5,13 +5,8 @@
 #include <time.h>
 #include <SFML/Graphics.hpp>
 
-#define side_right 0
-#define side_down 1
-#define side_left 2
-#define side_top 3
-
-const int gridWidth = 80;
-const int gridHeight = 40;
+const int gridWidth = 20;
+const int gridHeight = 10;
 
 struct Node
 {
@@ -30,12 +25,24 @@ bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
 
 int main()
 {
-    srand(time(NULL));
+    // srand(time(NULL));
+    srand(0);
     const int nodeSizePx = 10;
     const int screenWidth = gridWidth * nodeSizePx;
     const int screenHeight = gridHeight * nodeSizePx;
 
     Node nodeList[gridWidth * gridHeight];
+    int direction = side_down;
+    int wallSide = side_left;
+    int solver_i = 0;
+    int solver_j = 0;
+    int target_i = gridWidth - 1;
+    int target_j = gridHeight - 1;
+
+    // nodeList[1 + 3 * gridWidth].prevSide = side_left;
+    // nodeList[0 + 3 * gridWidth].prevSide = side_top;
+    // nodeList[0 + 2 * gridWidth].prevSide = side_top;
+    // nodeList[0 + 1 * gridWidth].prevSide = side_top;
 
     int current_i = rand() % gridWidth;
     int current_j = rand() % gridHeight;
@@ -53,6 +60,11 @@ int main()
                 window.close();
         }
         window.clear(sf::Color::Black);
+
+        for (int i = 0; i < gridWidth; ++i)
+            for (int j = 0; j < gridHeight; ++j)
+                drawNode(window, nodeList, i, j, nodeSizePx,
+                        (i == current_i && j == current_j));
 
         if (hasUnvisitedNodes(nodeList))
         {
@@ -81,14 +93,31 @@ int main()
                 nodeStack_j.pop();
             }
         }
+        else if (!(solver_i == target_i && solver_j == target_j))
+        {
+            int di = (4 - (wallSide - direction)) % 4;
+            for (int i = 0; i < 4 * di; i += di)
+            {
+                int nextSide = (wallSide + i) % 4;
+                if (nodeList[solver_i + solver_j * gridWidth].walls[nextSide])
+                    continue;
+                direction = nextSide;
+                wallSide = (nextSide + di * 3) % 4;
+                int next_i = getNext_i(solver_i, nextSide);
+                int next_j = getNext_j(solver_j, nextSide);
+                // nodeList[next_i + next_j * gridWidth].prevSide = (nextSide + 2) % 4;
+                solver_i = next_i;
+                solver_j = next_j;
+                break;
+            }
+        }
 
-        for (int i = 0; i < gridWidth; ++i)
-            for (int j = 0; j < gridHeight; ++j)
-                drawNode(window, nodeList, i, j, nodeSizePx,
-                        (i == current_i && j == current_j));
+        drawNode(window, nodeList, 0, 0, nodeSizePx, true);
+        drawNode(window, nodeList, target_i, target_j, nodeSizePx, true);
+        drawNode(window, nodeList, solver_i, solver_j, nodeSizePx, true);
+        // drawPath(window, nodeList, target_i, target_j, nodeSizePx);
 
-        // sf::sleep(sf::milliseconds(100));
-
+        sf::sleep(sf::milliseconds(10));
         window.display();
     }
 }
