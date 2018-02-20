@@ -11,8 +11,8 @@ struct Node {
     // side_right, side_down, side_left, side_top
     bool walls[4] = { true, true, true, true };
     int group;
+    bool visited; // FIXME because mazeHelper.h assumed this
 };
-// FIXME mazeHelper.h require variables from here
 #include "mazeHelper.h"
 
 struct Wall {
@@ -20,12 +20,11 @@ struct Wall {
     Node* node2;
 };
 
-int getNext_i(int current_i, int side);
-int getNext_j(int current_j, int side);
-bool indexIsValid(int i, int j);
 void mergeGroup(Node nodeList[], int group1, int group2);
 int diff2side(int diff);
 void setWall(Node nodeList[], Node* node1, Node* node2, bool state);
+// FIXME setwall same name, different function
+// also defined on mazeHelper.h
 
 int main()
 {
@@ -126,44 +125,6 @@ void setWall(Node nodeList[], Node* node1, Node* node2, bool state)
     node1->walls[side] = state;
     node2->walls[oppositeSide] = state;
 }
-
-int getNext_i(int current_i, int side)
-{
-    int delta_i = 0;
-    if (side == side_right)
-        delta_i++;
-    else if (side == side_left)
-        delta_i--;
-    return current_i + delta_i;
-}
-
-int getNext_j(int current_j, int side)
-{
-    int delta_j = 0;
-    if (side == side_down)
-        delta_j++;
-    else if (side == side_top)
-        delta_j--;
-    return current_j + delta_j;
-}
-
-bool indexIsValid(int i, int j)
-{
-    if (i < 0 || i >= gridWidth) return false;
-    if (j < 0 || j >= gridHeight) return false;
-    return true;
-}
-
-// void setWall(Node nodeList[], int i, int j, int side, bool state)
-// {
-//     int next_i = getNext_i(i, side);
-//     int next_j = getNext_j(j, side);
-//     if (!indexIsValid(next_i, next_j)) return;
-// 
-//     nodeList[i + j * gridWidth].walls[side] = state;
-//     int oppositeSide = (side + 2) % 4;
-//     nodeList[next_i + next_j * gridWidth].walls[oppositeSide] = state;
-// }
 
 void mergeGroup(Node nodeList[], int group1, int group2)
 {
