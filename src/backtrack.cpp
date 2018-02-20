@@ -21,13 +21,6 @@ struct Node
 };
 #include "mazeHelper.h"
 
-bool indexIsValid(int i, int j);
-int getNext_i(int current_i, int side);
-int getNext_j(int current_j, int side);
-void setWall(Node nodeList[], int i, int j, int side, bool state);
-bool hasUnvisitedNodes(Node nodeList[]);
-bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
-
 int main()
 {
     srand(time(NULL));
@@ -91,64 +84,4 @@ int main()
 
         window.display();
     }
-}
-
-bool indexIsValid(int i, int j)
-{
-    if (i < 0 || i >= gridWidth) return false;
-    if (j < 0 || j >= gridHeight) return false;
-    return true;
-}
-
-int getNext_i(int current_i, int side)
-{
-    int delta_i = 0;
-    if (side == side_right)
-        delta_i++;
-    else if (side == side_left)
-        delta_i--;
-    return current_i + delta_i;
-}
-
-int getNext_j(int current_j, int side)
-{
-    int delta_j = 0;
-    if (side == side_down)
-        delta_j++;
-    else if (side == side_top)
-        delta_j--;
-    return current_j + delta_j;
-}
-
-void setWall(Node nodeList[], int i, int j, int side, bool state)
-{
-    int next_i = getNext_i(i, side);
-    int next_j = getNext_j(j, side);
-    if (!indexIsValid(next_i, next_j)) return;
-
-    nodeList[i + j * gridWidth].walls[side] = state;
-    int oppositeSide = (side + 2) % 4;
-    nodeList[next_i + next_j * gridWidth].walls[oppositeSide] = state;
-}
-
-
-bool hasUnvisitedNodes(Node nodeList[])
-{
-    for (int i = 0; i < gridWidth * gridHeight; ++i)
-        if (!nodeList[i].visited)
-            return true;
-    return false;
-}
-
-bool hasUnvisitedNeighbor(Node nodeList[], int i, int j)
-{
-    for (int side = 0; side < 4; ++side)
-    {
-        int next_i = getNext_i(i, side);
-        int next_j = getNext_j(j, side);
-        if (!indexIsValid(next_i, next_j)) continue;
-        if (!nodeList[next_i + next_j * gridWidth].visited)
-            return true;
-    }
-    return false;
 }
