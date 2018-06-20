@@ -1,11 +1,20 @@
-#define side_right 0
-#define side_down 1
-#define side_left 2
-#define side_top 3
+#define SIDE_RIGHT 0
+#define SIDE_DOWN 1
+#define SIDE_LEFT 2
+#define SIDE_TOP 3
+
+#define GRID_WIDTH 80
+#define GRID_HEIGHT 40
+
+struct Node {
+    bool walls[4] = { true, true, true, true };
+    int group;
+    bool visited = false;
+};
 
 void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false)
 {
-    Node* node = &(nodeList[i + j * gridWidth]);
+    Node* node = &(nodeList[i + j * GRID_WIDTH]);
     if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))
     {
         float scale = 0.6;
@@ -22,25 +31,25 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeS
 
         sf::RectangleShape wall;
         wall.setFillColor(sf::Color::White);
-        if (!node->walls[side_right])
+        if (!node->walls[SIDE_RIGHT])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness + innerNodeSizePx, j * nodeSizePx + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
-        if (!node->walls[side_left])
+        if (!node->walls[SIDE_LEFT])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx, j * nodeSizePx + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
-        if (!node->walls[side_top])
+        if (!node->walls[SIDE_TOP])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
-        if (!node->walls[side_down])
+        if (!node->walls[SIDE_DOWN])
         {
             wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness + innerNodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
@@ -51,17 +60,17 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeS
 
 bool indexIsValid(int i, int j)
 {
-    if (i < 0 || i >= gridWidth) return false;
-    if (j < 0 || j >= gridHeight) return false;
+    if (i < 0 || i >= GRID_WIDTH) return false;
+    if (j < 0 || j >= GRID_HEIGHT) return false;
     return true;
 }
 
 int getNext_i(int current_i, int side)
 {
     int delta_i = 0;
-    if (side == side_right)
+    if (side == SIDE_RIGHT)
         delta_i++;
-    else if (side == side_left)
+    else if (side == SIDE_LEFT)
         delta_i--;
     return current_i + delta_i;
 }
@@ -69,9 +78,9 @@ int getNext_i(int current_i, int side)
 int getNext_j(int current_j, int side)
 {
     int delta_j = 0;
-    if (side == side_down)
+    if (side == SIDE_DOWN)
         delta_j++;
-    else if (side == side_top)
+    else if (side == SIDE_TOP)
         delta_j--;
     return current_j + delta_j;
 }
@@ -82,14 +91,14 @@ void setWall(Node nodeList[], int i, int j, int side, bool state)
     int next_j = getNext_j(j, side);
     if (!indexIsValid(next_i, next_j)) return;
 
-    nodeList[i + j * gridWidth].walls[side] = state;
+    nodeList[i + j * GRID_WIDTH].walls[side] = state;
     int oppositeSide = (side + 2) % 4;
-    nodeList[next_i + next_j * gridWidth].walls[oppositeSide] = state;
+    nodeList[next_i + next_j * GRID_WIDTH].walls[oppositeSide] = state;
 }
 
 bool hasUnvisitedNodes(Node nodeList[])
 {
-    for (int i = 0; i < gridWidth * gridHeight; ++i)
+    for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; ++i)
         if (!nodeList[i].visited)
             return true;
     return false;
@@ -102,7 +111,7 @@ bool hasUnvisitedNeighbor(Node nodeList[], int i, int j)
         int next_i = getNext_i(i, side);
         int next_j = getNext_j(j, side);
         if (!indexIsValid(next_i, next_j)) continue;
-        if (!nodeList[next_i + next_j * gridWidth].visited)
+        if (!nodeList[next_i + next_j * GRID_WIDTH].visited)
             return true;
     }
     return false;

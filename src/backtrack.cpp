@@ -5,34 +5,20 @@
 #include <time.h>
 #include <SFML/Graphics.hpp>
 
-#define side_right 0
-#define side_down 1
-#define side_left 2
-#define side_top 3
-
-const int gridWidth = 80;
-const int gridHeight = 40;
-
-struct Node
-{
-    // side_right, side_down, side_left, side_top
-    bool walls[4] = { true, true, true, true };
-    bool visited = false;
-};
 #include "mazeHelper.h"
 
 int main()
 {
     srand(time(NULL));
     const int nodeSizePx = 10;
-    const int screenWidth = gridWidth * nodeSizePx;
-    const int screenHeight = gridHeight * nodeSizePx;
+    const int screenWidth = GRID_WIDTH * nodeSizePx;
+    const int screenHeight = GRID_HEIGHT * nodeSizePx;
 
-    Node nodeList[gridWidth * gridHeight];
+    Node nodeList[GRID_WIDTH * GRID_HEIGHT];
 
-    int current_i = rand() % gridWidth;
-    int current_j = rand() % gridHeight;
-    nodeList[current_i + current_j * gridWidth].visited = true;
+    int current_i = rand() % GRID_WIDTH;
+    int current_j = rand() % GRID_HEIGHT;
+    nodeList[current_i + current_j * GRID_WIDTH].visited = true;
     std::stack<int> nodeStack_i;
     std::stack<int> nodeStack_j;
 
@@ -58,13 +44,13 @@ int main()
                     next_i = getNext_i(current_i, nextSide);
                     next_j = getNext_j(current_j, nextSide);
                 } while (!indexIsValid(next_i, next_j) ||
-                        nodeList[next_i + next_j * gridWidth].visited);
+                        nodeList[next_i + next_j * GRID_WIDTH].visited);
                 nodeStack_i.push(current_i);
                 nodeStack_j.push(current_j);
                 setWall(nodeList, current_i, current_j, nextSide, false);
                 current_i = next_i;
                 current_j = next_j;
-                nodeList[current_i + current_j * gridWidth].visited = true;
+                nodeList[current_i + current_j * GRID_WIDTH].visited = true;
             }
             else
             {
@@ -75,8 +61,8 @@ int main()
             }
         }
 
-        for (int i = 0; i < gridWidth; ++i)
-            for (int j = 0; j < gridHeight; ++j)
+        for (int i = 0; i < GRID_WIDTH; ++i)
+            for (int j = 0; j < GRID_HEIGHT; ++j)
                 drawNode(window, nodeList, i, j, nodeSizePx,
                         (i == current_i && j == current_j));
 
