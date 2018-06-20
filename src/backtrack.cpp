@@ -10,9 +10,6 @@
 int main()
 {
     srand(time(NULL));
-    const int nodeSizePx = 10;
-    const int screenWidth = GRID_WIDTH * nodeSizePx;
-    const int screenHeight = GRID_HEIGHT * nodeSizePx;
 
     Node nodeList[GRID_WIDTH * GRID_HEIGHT];
 
@@ -22,7 +19,7 @@ int main()
     std::stack<int> nodeStack_i;
     std::stack<int> nodeStack_j;
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Maze");
+    sf::RenderWindow window(sf::VideoMode(GRID_WIDTH * NODE_SIZE, GRID_HEIGHT * NODE_SIZE), "Maze");
     while(window.isOpen())
     {
         sf::Event event;
@@ -63,7 +60,7 @@ int main()
 
         for (int i = 0; i < GRID_WIDTH; ++i)
             for (int j = 0; j < GRID_HEIGHT; ++j)
-                drawNode(window, nodeList, i, j, nodeSizePx,
+                drawNode(window, nodeList, i, j,
                         (i == current_i && j == current_j));
 
         // sf::sleep(sf::milliseconds(100));

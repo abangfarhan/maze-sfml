@@ -19,9 +19,6 @@ void setWall(Node nodeList[], Node* node1, Node* node2, bool state);
 int main()
 {
     srand(time(NULL));
-    const int nodeSizePx = 20;
-    const int screenWidth = GRID_WIDTH * nodeSizePx;
-    const int screenHeight = GRID_HEIGHT * nodeSizePx;
 
     Node nodeList[GRID_WIDTH * GRID_HEIGHT];
     for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; ++i)
@@ -47,7 +44,7 @@ int main()
             }
         }
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Maze");
+    sf::RenderWindow window(sf::VideoMode(GRID_WIDTH * NODE_SIZE, GRID_HEIGHT * NODE_SIZE), "Maze");
     while(window.isOpen())
     {
         sf::Event event;
@@ -75,7 +72,7 @@ int main()
 
         for (int i = 0; i < GRID_WIDTH; ++i)
             for (int j = 0; j < GRID_HEIGHT; ++j)
-                drawNode(window, nodeList, i, j, nodeSizePx);
+                drawNode(window, nodeList, i, j);
 
         // sf::sleep(sf::milliseconds(100));
         window.display();

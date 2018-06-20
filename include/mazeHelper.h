@@ -3,8 +3,10 @@
 #define SIDE_LEFT 2
 #define SIDE_TOP 3
 
-#define GRID_WIDTH 80
-#define GRID_HEIGHT 40
+#define GRID_WIDTH 30
+#define GRID_HEIGHT 20
+
+#define NODE_SIZE 15
 
 struct Node {
     bool walls[4] = { true, true, true, true };
@@ -12,7 +14,7 @@ struct Node {
     bool visited = false;
 };
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false);
+void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCurrent = false);
 
 bool indexIsValid(int i, int j);
 

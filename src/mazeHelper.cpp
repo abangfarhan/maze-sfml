@@ -2,17 +2,17 @@
 
 #include "mazeHelper.h"
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent)
+void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCurrent)
 {
     Node* node = &(nodeList[i + j * GRID_WIDTH]);
     if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))
     {
         float scale = 0.6;
-        float innerNodeSizePx = nodeSizePx * scale;
-        float wallThickness = (nodeSizePx - innerNodeSizePx) / 2;
+        float innerNodeSizePx = NODE_SIZE * scale;
+        float wallThickness = (NODE_SIZE - innerNodeSizePx) / 2;
 
         sf::RectangleShape cell;
-        cell.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness));
+        cell.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE + wallThickness));
         cell.setSize(sf::Vector2f(innerNodeSizePx, innerNodeSizePx));
         cell.setFillColor(sf::Color::White);
         if (isCurrent)
@@ -23,25 +23,25 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeS
         wall.setFillColor(sf::Color::White);
         if (!node->walls[SIDE_RIGHT])
         {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness + innerNodeSizePx, j * nodeSizePx + wallThickness));
+            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness + innerNodeSizePx, j * NODE_SIZE + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
         if (!node->walls[SIDE_LEFT])
         {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx, j * nodeSizePx + wallThickness));
+            wall.setPosition(sf::Vector2f(i * NODE_SIZE, j * NODE_SIZE + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
         if (!node->walls[SIDE_TOP])
         {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx));
+            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
         if (!node->walls[SIDE_DOWN])
         {
-            wall.setPosition(sf::Vector2f(i * nodeSizePx + wallThickness, j * nodeSizePx + wallThickness + innerNodeSizePx));
+            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE + wallThickness + innerNodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
