@@ -12,7 +12,7 @@ struct Node {
     bool visited = false;
 };
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent);
+void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false);
 
 bool indexIsValid(int i, int j);
 

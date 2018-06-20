@@ -2,7 +2,7 @@
 
 #include "mazeHelper.h"
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent = false)
+void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, int nodeSizePx, bool isCurrent)
 {
     Node* node = &(nodeList[i + j * GRID_WIDTH]);
     if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))

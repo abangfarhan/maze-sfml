@@ -25,7 +25,7 @@ build/mazeHelper.o: src/mazeHelper.cpp include/mazeHelper.h
 
 kruskall: bin/kruskall
 
-bin/kruskall: build/kruskall.o
+bin/kruskall: build/kruskall.o build/mazeHelper.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
 build/kruskall.o: src/kruskall.cpp include/mazeHelper.h
