@@ -11,10 +11,17 @@ struct Wall {
 };
 
 void mergeGroup(Node nodeList[], int group1, int group2);
-int diff2side(int diff);
-void setWall(Node nodeList[], Node* node1, Node* node2, bool state);
-// FIXME setwall same name, different function
-// also defined on mazeHelper.h
+
+/*
+ * return the connecting side between node1 and node2
+ * side is relative to the node1
+ */
+int connectingSide(int node1_index, int node2_index);
+
+/* 
+ * set the walls connecting node1 and node2 to false
+ */
+void joinNodes(Node nodeList[], Node* node1, Node* node2);
 
 int main()
 {
@@ -29,11 +36,11 @@ int main()
         for (int row = 0; row < GRID_HEIGHT; ++row)
         {
             Node* node1 = &(nodeList[col + row * GRID_WIDTH]);
-            // only check SIDE_RIGHT and SIDE_DOWN
-            for (int side = 0; side < 2; ++side)
+            int check_side[2] = {SIDE_RIGHT, SIDE_DOWN};
+            for (int i = 0; i < 2; ++i)
             {
-                int next_col = nextCol(col, side);
-                int next_row = nextRow(row, side);
+                int next_col = nextCol(col, check_side[i]);
+                int next_row = nextRow(row, check_side[i]);
                 if (indexIsValid(next_col, next_row))
                 {
                     Wall wall;
@@ -63,7 +70,7 @@ int main()
             Node* node2 = wall->node2;
             if (node1->group != node2->group)
             {
-                setWall(nodeList, node1, node2, false);
+                joinNodes(nodeList, node1, node2);
                 mergeGroup(nodeList, node1->group, node2->group);
             }
 
@@ -79,10 +86,10 @@ int main()
     }
 }
 
-int diff2side(int diff)
+int connectingSide(int node1_index, int node2_index)
 {
     int side;
-    switch (diff)
+    switch (node2_index - node1_index)
     {
     case 1:
         side = SIDE_RIGHT;
@@ -103,14 +110,14 @@ int diff2side(int diff)
     return side;
 }
 
-void setWall(Node nodeList[], Node* node1, Node* node2, bool state)
+void joinNodes(Node nodeList[], Node* node1, Node* node2)
 {
     int node1_index = node1 - nodeList;
     int node2_index = node2 - nodeList;
-    int side = diff2side(node2_index - node1_index);
+    int side = connectingSide(node1_index, node2_index);
     int oppositeSide = (side + 2) % 4;
-    node1->walls[side] = state;
-    node2->walls[oppositeSide] = state;
+    node1->walls[side] = false;
+    node2->walls[oppositeSide] = false;
 }
 
 void mergeGroup(Node nodeList[], int group1, int group2)
