@@ -14,16 +14,16 @@ struct Node {
     bool visited = false;
 };
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCurrent = false);
+void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool isCurrent = false);
 
-bool indexIsValid(int i, int j);
+bool indexIsValid(int col, int row);
 
-int getNext_i(int current_i, int side);
+int nextCol(int cur_col, int side);
 
-int getNext_j(int current_j, int side);
+int nextRow(int cur_row, int side);
 
-void setWall(Node nodeList[], int i, int j, int side, bool state);
+void setWall(Node nodeList[], int col, int row, int side, bool state);
 
 bool hasUnvisitedNodes(Node nodeList[]);
 
-bool hasUnvisitedNeighbor(Node nodeList[], int i, int j);
+bool hasUnvisitedNeighbor(Node nodeList[], int col, int row);

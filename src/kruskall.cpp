@@ -25,20 +25,20 @@ int main()
         nodeList[i].group = i;
 
     std::vector<Wall> wallVec;
-    for (int i = 0; i < GRID_WIDTH; ++i)
-        for (int j = 0; j < GRID_HEIGHT; ++j)
+    for (int col = 0; col < GRID_WIDTH; ++col)
+        for (int row = 0; row < GRID_HEIGHT; ++row)
         {
-            Node* node1 = &(nodeList[i + j * GRID_WIDTH]);
+            Node* node1 = &(nodeList[col + row * GRID_WIDTH]);
             // only check SIDE_RIGHT and SIDE_DOWN
             for (int side = 0; side < 2; ++side)
             {
-                int next_i = getNext_i(i, side);
-                int next_j = getNext_j(j, side);
-                if (indexIsValid(next_i, next_j))
+                int next_col = nextCol(col, side);
+                int next_row = nextRow(row, side);
+                if (indexIsValid(next_col, next_row))
                 {
                     Wall wall;
                     wall.node1 = node1;
-                    wall.node2 = &(nodeList[next_i + next_j * GRID_WIDTH]);
+                    wall.node2 = &(nodeList[next_col + next_row * GRID_WIDTH]);
                     wallVec.push_back(wall);
                 }
             }
@@ -70,9 +70,9 @@ int main()
             wallVec.erase(wallVec.begin() + rndWall);
         }
 
-        for (int i = 0; i < GRID_WIDTH; ++i)
-            for (int j = 0; j < GRID_HEIGHT; ++j)
-                drawNode(window, nodeList, i, j);
+        for (int col = 0; col < GRID_WIDTH; ++col)
+            for (int row = 0; row < GRID_HEIGHT; ++row)
+                drawNode(window, nodeList, col, row);
 
         // sf::sleep(sf::milliseconds(100));
         window.display();

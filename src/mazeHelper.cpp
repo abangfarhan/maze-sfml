@@ -2,9 +2,9 @@
 
 #include "mazeHelper.h"
 
-void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCurrent)
+void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool isCurrent)
 {
-    Node* node = &(nodeList[i + j * GRID_WIDTH]);
+    Node* node = &(nodeList[col + row * GRID_WIDTH]);
     if (!(node->walls[0] && node->walls[1] && node->walls[2] && node->walls[3]))
     {
         float scale = 0.6;
@@ -12,7 +12,7 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCu
         float wallThickness = (NODE_SIZE - innerNodeSizePx) / 2;
 
         sf::RectangleShape cell;
-        cell.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE + wallThickness));
+        cell.setPosition(sf::Vector2f(col * NODE_SIZE + wallThickness, row * NODE_SIZE + wallThickness));
         cell.setSize(sf::Vector2f(innerNodeSizePx, innerNodeSizePx));
         cell.setFillColor(sf::Color::White);
         if (isCurrent)
@@ -23,67 +23,67 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int i, int j, bool isCu
         wall.setFillColor(sf::Color::White);
         if (!node->walls[SIDE_RIGHT])
         {
-            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness + innerNodeSizePx, j * NODE_SIZE + wallThickness));
+            wall.setPosition(sf::Vector2f(col * NODE_SIZE + wallThickness + innerNodeSizePx, row * NODE_SIZE + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
         if (!node->walls[SIDE_LEFT])
         {
-            wall.setPosition(sf::Vector2f(i * NODE_SIZE, j * NODE_SIZE + wallThickness));
+            wall.setPosition(sf::Vector2f(col * NODE_SIZE, row * NODE_SIZE + wallThickness));
             wall.setSize(sf::Vector2f(wallThickness, innerNodeSizePx));
             window.draw(wall);
         }
         if (!node->walls[SIDE_TOP])
         {
-            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE));
+            wall.setPosition(sf::Vector2f(col * NODE_SIZE + wallThickness, row * NODE_SIZE));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
         if (!node->walls[SIDE_DOWN])
         {
-            wall.setPosition(sf::Vector2f(i * NODE_SIZE + wallThickness, j * NODE_SIZE + wallThickness + innerNodeSizePx));
+            wall.setPosition(sf::Vector2f(col * NODE_SIZE + wallThickness, row * NODE_SIZE + wallThickness + innerNodeSizePx));
             wall.setSize(sf::Vector2f(innerNodeSizePx, wallThickness));
             window.draw(wall);
         }
     }
 }
 
-bool indexIsValid(int i, int j)
+bool indexIsValid(int col, int row)
 {
-    if (i < 0 || i >= GRID_WIDTH) return false;
-    if (j < 0 || j >= GRID_HEIGHT) return false;
+    if (col < 0 || col >= GRID_WIDTH) return false;
+    if (row < 0 || row >= GRID_HEIGHT) return false;
     return true;
 }
 
-int getNext_i(int current_i, int side)
+int nextCol(int cur_col, int side)
 {
-    int delta_i = 0;
+    int dcol = 0;
     if (side == SIDE_RIGHT)
-        delta_i++;
+        dcol++;
     else if (side == SIDE_LEFT)
-        delta_i--;
-    return current_i + delta_i;
+        dcol--;
+    return cur_col + dcol;
 }
 
-int getNext_j(int current_j, int side)
+int nextRow(int cur_row, int side)
 {
-    int delta_j = 0;
+    int drow = 0;
     if (side == SIDE_DOWN)
-        delta_j++;
+        drow++;
     else if (side == SIDE_TOP)
-        delta_j--;
-    return current_j + delta_j;
+        drow--;
+    return cur_row + drow;
 }
 
-void setWall(Node nodeList[], int i, int j, int side, bool state)
+void setWall(Node nodeList[], int col, int row, int side, bool state)
 {
-    int next_i = getNext_i(i, side);
-    int next_j = getNext_j(j, side);
-    if (!indexIsValid(next_i, next_j)) return;
+    int next_col = nextCol(col, side);
+    int next_row = nextRow(row, side);
+    if (!indexIsValid(next_col, next_row)) return;
 
-    nodeList[i + j * GRID_WIDTH].walls[side] = state;
+    nodeList[col + row * GRID_WIDTH].walls[side] = state;
     int oppositeSide = (side + 2) % 4;
-    nodeList[next_i + next_j * GRID_WIDTH].walls[oppositeSide] = state;
+    nodeList[next_col + next_row * GRID_WIDTH].walls[oppositeSide] = state;
 }
 
 bool hasUnvisitedNodes(Node nodeList[])
@@ -94,14 +94,14 @@ bool hasUnvisitedNodes(Node nodeList[])
     return false;
 }
 
-bool hasUnvisitedNeighbor(Node nodeList[], int i, int j)
+bool hasUnvisitedNeighbor(Node nodeList[], int col, int row)
 {
     for (int side = 0; side < 4; ++side)
     {
-        int next_i = getNext_i(i, side);
-        int next_j = getNext_j(j, side);
-        if (!indexIsValid(next_i, next_j)) continue;
-        if (!nodeList[next_i + next_j * GRID_WIDTH].visited)
+        int next_col = nextCol(col, side);
+        int next_row = nextRow(row, side);
+        if (!indexIsValid(next_col, next_row)) continue;
+        if (!nodeList[next_col + next_row * GRID_WIDTH].visited)
             return true;
     }
     return false;
