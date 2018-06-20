@@ -14,10 +14,13 @@ SFML_LIB := -L "D:/Program Files (x86)/SFML/lib" \
 
 backtrack: bin/backtrack
 
-bin/backtrack: build/backtrack.o
+bin/backtrack: build/backtrack.o build/mazeHelper.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
 build/backtrack.o: src/backtrack.cpp include/mazeHelper.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
+
+build/mazeHelper.o: src/mazeHelper.cpp include/mazeHelper.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
 kruskall: bin/kruskall
