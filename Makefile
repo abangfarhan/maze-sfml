@@ -33,7 +33,7 @@ build/kruskall.o: src/kruskall.cpp include/mazeHelper.h
 
 wallFollowing: bin/wallFollowing
 
-bin/wallFollowing: build/wallFollowing.o
+bin/wallFollowing: build/wallFollowing.o build/mazeHelper.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
 
 build/wallFollowing.o: src/wallFollowing.cpp include/mazeHelper.h

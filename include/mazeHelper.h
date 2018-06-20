@@ -12,6 +12,8 @@ struct Node {
     bool walls[4] = { true, true, true, true };
     int group;
     bool visited = false;
+    bool paths[4] = { false, false, false, false };
+    int n_visited = 0;
 };
 
 void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool isCurrent = false);
