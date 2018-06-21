@@ -1,6 +1,7 @@
 CXX := g++
 CXXFLAGS := --std=c++11 -g -Wall
 INC := -I include
+# using SFML version 2.4.2
 SFML_INCLUDE := -DSFML_STATIC -I "D:/Program Files (x86)/SFML/include"
 SFML_LIB := -L "D:/Program Files (x86)/SFML/lib" \
 	-l sfml-graphics-s-d \

@@ -1,6 +1,6 @@
 # Maze with SFML
 
-In this repo I share my implementation of making mazes with C++ and SFML as the graphic library. In the maze, each cell is represented by a struct called `Node`, with basic property (`walls`) of telling what sides of that cell are "blocked".
+In this repo I share my implementation of making mazes with C++, with SFML (version 2.4.2) as the graphic library. In the maze, each cell is represented by a struct called `Node`, with basic property (`walls`) of telling what sides of that cell are "blocked".
 
 I will attempt to implement algorithms related to maze generation and maze solving.
 
