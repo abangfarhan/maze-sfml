@@ -48,6 +48,14 @@ void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool 
     }
 }
 
+void drawMaze(sf::RenderWindow &window, Node nodeList[])
+{
+    int col, row;
+    for (col = 0; col < GRID_WIDTH; ++col)
+        for (row = 0; row < GRID_HEIGHT; ++row)
+            drawNode(window, nodeList, col, row, false);
+}
+
 bool indexIsValid(int col, int row)
 {
     if (col < 0 || col >= GRID_WIDTH) return false;

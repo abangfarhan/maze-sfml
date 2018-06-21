@@ -58,10 +58,8 @@ int main()
             }
         }
 
-        for (int col = 0; col < GRID_WIDTH; ++col)
-            for (int row = 0; row < GRID_HEIGHT; ++row)
-                drawNode(window, nodeList, col, row,
-                        (col == cur_col && row == cur_row));
+        drawMaze(window, nodeList);
+        drawNode(window, nodeList, cur_col, cur_row, true);
 
         // sf::sleep(sf::milliseconds(100));
 

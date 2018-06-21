@@ -61,9 +61,7 @@ int main()
             wallVec.erase(wallVec.begin() + rndWall);
         }
 
-        for (int col = 0; col < GRID_WIDTH; ++col)
-            for (int row = 0; row < GRID_HEIGHT; ++row)
-                drawNode(window, nodeList, col, row);
+        drawMaze(window, nodeList);
 
         // sf::sleep(sf::milliseconds(100));
         window.display();

@@ -23,6 +23,8 @@ struct Wall {
 
 void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool isCurrent = false);
 
+void drawMaze(sf::RenderWindow &window, Node nodeList[]);
+
 bool indexIsValid(int col, int row);
 
 int nextCol(int cur_col, int side);
