@@ -75,12 +75,9 @@ int main()
                 addWalls(&wallVec, nodeList, cur_col, cur_row);
             }
 
-            // remove wall from wallVec
-            for(size_t i = 0; i < wallVec.size(); ++i) {
-                if(wallVec[i].node1 == node1 && wallVec[i].node2 == node2) {
-                    wallVec.erase(wallVec.begin() + i);
-                }
-            }
+            // pushing item on std::vector will add it on the tail
+            // so deleting at rndWall will delete at the correct location
+            wallVec.erase(wallVec.begin() + rndWall);
         }
 
         for (int col = 0; col < GRID_WIDTH; ++col)
