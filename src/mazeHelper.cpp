@@ -106,3 +106,38 @@ bool hasUnvisitedNeighbor(Node nodeList[], int col, int row)
     }
     return false;
 }
+
+int connectingSide(int node1_index, int node2_index)
+{
+    int side;
+    switch (node2_index - node1_index)
+    {
+    case 1:
+        side = SIDE_RIGHT;
+        break;
+    case -1:
+        side = SIDE_LEFT;
+        break;
+    case GRID_WIDTH:
+        side = SIDE_DOWN;
+        break;
+    case -GRID_WIDTH:
+        side = SIDE_TOP;
+        break;
+    default:
+        // ERROR: nodes not adjacent!
+        side = -1;
+        break;
+    }
+    return side;
+}
+
+void joinNodes(Node nodeList[], Node* node1, Node* node2)
+{
+    int node1_index = node1 - nodeList;
+    int node2_index = node2 - nodeList;
+    int side = connectingSide(node1_index, node2_index);
+    int oppositeSide = (side + 2) % 4;
+    node1->walls[side] = false;
+    node2->walls[oppositeSide] = false;
+}

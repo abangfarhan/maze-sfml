@@ -16,6 +16,11 @@ struct Node {
     int n_visited = 0;
 };
 
+struct Wall {
+    Node* node1;
+    Node* node2;
+};
+
 void drawNode(sf::RenderWindow &window, Node nodeList[], int col, int row, bool isCurrent = false);
 
 bool indexIsValid(int col, int row);
@@ -29,3 +34,14 @@ void setWall(Node nodeList[], int col, int row, int side, bool state);
 bool hasUnvisitedNodes(Node nodeList[]);
 
 bool hasUnvisitedNeighbor(Node nodeList[], int col, int row);
+
+/*
+ * return the connecting side between node1 and node2
+ * side is relative to the node1
+ */
+int connectingSide(int node1_index, int node2_index);
+
+/* 
+ * set the walls connecting node1 and node2 to false
+ */
+void joinNodes(Node nodeList[], Node* node1, Node* node2);

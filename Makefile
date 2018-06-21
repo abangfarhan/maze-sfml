@@ -39,5 +39,13 @@ bin/wallFollowing: build/wallFollowing.o build/mazeHelper.o
 build/wallFollowing.o: src/wallFollowing.cpp include/mazeHelper.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
 
+prim: bin/prim
+
+bin/prim: build/prim.o build/mazeHelper.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(SFML_LIB)
+
+build/prim.o: src/prim.cpp include/mazeHelper.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $< $(INC) $(SFML_INCLUDE)
+
 clean:
 	rm build/*.*

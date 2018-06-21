@@ -5,23 +5,7 @@
 
 #include "mazeHelper.h"
 
-struct Wall {
-    Node* node1;
-    Node* node2;
-};
-
 void mergeGroup(Node nodeList[], int group1, int group2);
-
-/*
- * return the connecting side between node1 and node2
- * side is relative to the node1
- */
-int connectingSide(int node1_index, int node2_index);
-
-/* 
- * set the walls connecting node1 and node2 to false
- */
-void joinNodes(Node nodeList[], Node* node1, Node* node2);
 
 int main()
 {
@@ -84,40 +68,6 @@ int main()
         // sf::sleep(sf::milliseconds(100));
         window.display();
     }
-}
-
-int connectingSide(int node1_index, int node2_index)
-{
-    int side;
-    switch (node2_index - node1_index)
-    {
-    case 1:
-        side = SIDE_RIGHT;
-        break;
-    case -1:
-        side = SIDE_LEFT;
-        break;
-    case GRID_WIDTH:
-        side = SIDE_DOWN;
-        break;
-    case -GRID_WIDTH:
-        side = SIDE_TOP;
-        break;
-    default:
-        std::cout << "ERROR: nodes not adjacent" << std::endl;
-        break;
-    }
-    return side;
-}
-
-void joinNodes(Node nodeList[], Node* node1, Node* node2)
-{
-    int node1_index = node1 - nodeList;
-    int node2_index = node2 - nodeList;
-    int side = connectingSide(node1_index, node2_index);
-    int oppositeSide = (side + 2) % 4;
-    node1->walls[side] = false;
-    node2->walls[oppositeSide] = false;
 }
 
 void mergeGroup(Node nodeList[], int group1, int group2)
