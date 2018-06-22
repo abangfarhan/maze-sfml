@@ -23,7 +23,7 @@ This algorithm is used to generate maze. I followed the description in this [Wik
 
 ## Wall Following
 
-This algorithm is used to solve maze. The maze generation is done using backtracking algorithm. I followed the description on this [Wikipedia](https://en.wikipedia.org/wiki/Maze_solving_algorithm#Wall_follower) page. Here is the preview of my program:
+This algorithm is used to solve maze. The maze generation is done using backtracking algorithm (but not displayed). I followed the description on this [Wikipedia](https://en.wikipedia.org/wiki/Maze_solving_algorithm#Wall_follower) page. Here is the preview of my program:
 
 ![wall following preview](./images/wallFollowing.gif)
 

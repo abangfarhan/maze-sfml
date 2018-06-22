@@ -31,6 +31,35 @@ int main()
     std::stack<int> stack_col;
     std::stack<int> stack_row;
 
+    // backtracking algorithm to generate the maze
+    while(hasUnvisitedNodes(nodeList))
+    {
+        if (hasUnvisitedNeighbor(nodeList, cur_col, cur_row))
+        {
+            int nextSide;
+            int next_col, next_row;
+            do {
+                nextSide = rand() % 4;
+                next_col = nextCol(cur_col, nextSide);
+                next_row = nextRow(cur_row, nextSide);
+            } while (!indexIsValid(next_col, next_row) ||
+                    nodeList[next_col + next_row * GRID_WIDTH].visited);
+            stack_col.push(cur_col);
+            stack_row.push(cur_row);
+            setWall(nodeList, cur_col, cur_row, nextSide, false);
+            cur_col = next_col;
+            cur_row = next_row;
+            nodeList[cur_col + cur_row * GRID_WIDTH].visited = true;
+        }
+        else
+        {
+            cur_col = stack_col.top();
+            cur_row = stack_row.top();
+            stack_col.pop();
+            stack_row.pop();
+        }
+    }
+
     sf::RenderWindow window(sf::VideoMode(GRID_WIDTH * NODE_SIZE, GRID_HEIGHT * NODE_SIZE), "Maze");
     while(window.isOpen())
     {
@@ -50,34 +79,7 @@ int main()
                 drawNodePath(window, nodeList, col, row);
             }
 
-        if (hasUnvisitedNodes(nodeList))
-        {
-            if (hasUnvisitedNeighbor(nodeList, cur_col, cur_row))
-            {
-                int nextSide;
-                int next_col, next_row;
-                do {
-                    nextSide = rand() % 4;
-                    next_col = nextCol(cur_col, nextSide);
-                    next_row = nextRow(cur_row, nextSide);
-                } while (!indexIsValid(next_col, next_row) ||
-                        nodeList[next_col + next_row * GRID_WIDTH].visited);
-                stack_col.push(cur_col);
-                stack_row.push(cur_row);
-                setWall(nodeList, cur_col, cur_row, nextSide, false);
-                cur_col = next_col;
-                cur_row = next_row;
-                nodeList[cur_col + cur_row * GRID_WIDTH].visited = true;
-            }
-            else
-            {
-                cur_col = stack_col.top();
-                cur_row = stack_row.top();
-                stack_col.pop();
-                stack_row.pop();
-            }
-        }
-        else if (!(solver_col == target_col && solver_row == target_row))
+        if (!(solver_col == target_col && solver_row == target_row))
         {
             cur_col = -1, cur_row = -1;
 
