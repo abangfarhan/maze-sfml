@@ -17,21 +17,14 @@ int main()
     srand(time(NULL));
 
     Node nodeList[GRID_WIDTH * GRID_HEIGHT];
-    int direction = SIDE_DOWN;
-    int wallSide = SIDE_LEFT;
-    int solver_col = 0;
-    int solver_row = 0;
-    nodeList[solver_col + solver_row * GRID_WIDTH].n_visited++;
-    int target_col = GRID_WIDTH - 1;
-    int target_row = GRID_HEIGHT - 1;
 
+    // beginning of backtracking algorithm (to generate the maze)
     int cur_col = rand() % GRID_WIDTH;
     int cur_row = rand() % GRID_HEIGHT;
     nodeList[cur_col + cur_row * GRID_WIDTH].visited = true;
     std::stack<int> stack_col;
     std::stack<int> stack_row;
 
-    // backtracking algorithm to generate the maze
     while(hasUnvisitedNodes(nodeList))
     {
         if (hasUnvisitedNeighbor(nodeList, cur_col, cur_row))
@@ -59,6 +52,17 @@ int main()
             stack_row.pop();
         }
     }
+    // end of backtracking algorithm
+
+    cur_col = 0;
+    cur_row = 0;
+    // initial direction of agent
+    int direction = SIDE_DOWN;
+    // what side to follow (relative to agent)
+    int wallSide = SIDE_LEFT;
+    nodeList[cur_col + cur_row * GRID_WIDTH].n_visited++;
+    int target_col = GRID_WIDTH - 1;
+    int target_row = GRID_HEIGHT - 1;
 
     sf::RenderWindow window(sf::VideoMode(GRID_WIDTH * NODE_SIZE, GRID_HEIGHT * NODE_SIZE), "Maze");
     while(window.isOpen())
@@ -71,37 +75,41 @@ int main()
         }
         window.clear(sf::Color::Black);
 
-        for (int col = 0; col < GRID_WIDTH; ++col)
-            for (int row = 0; row < GRID_HEIGHT; ++row)
-            {
-                drawNode(window, nodeList, col, row,
-                        (col == cur_col && row == cur_row));
-                drawNodePath(window, nodeList, col, row);
-            }
-
-        if (!(solver_col == target_col && solver_row == target_row))
+        if (!(cur_col == target_col && cur_row == target_row))
         {
-            cur_col = -1, cur_row = -1;
-
+            /*
+             * We cycle each side clockwise (relative to agent's direction)
+             * starting from side defined by wallSide (relative to agent's direction)
+             * to find side that's not blocked
+             */
             int di = (4 - (wallSide - direction)) % 4;
+
+            int nextSide;
             for (int i = 0; i < 4 * di; i += di)
             {
-                int nextSide = (wallSide + i) % 4;
-                if (nodeList[solver_col + solver_row * GRID_WIDTH].walls[nextSide])
-                    continue;
-                direction = nextSide;
-                wallSide = (nextSide + di * 3) % 4;
-                int next_col = nextCol(solver_col, nextSide);
-                int next_row = nextRow(solver_row, nextSide);
-                nodeList[solver_col + solver_row * GRID_WIDTH].paths[nextSide] = true;
-                nodeList[next_col + next_row * GRID_WIDTH].paths[(nextSide + 2) % 4] = true;
-                nodeList[next_col + next_row * GRID_WIDTH].n_visited++;
-                // nodeList[next_col + next_row * GRID_WIDTH].prevSide = (nextSide + 2) % 4;
-                solver_col = next_col;
-                solver_row = next_row;
-                break;
+                nextSide = (wallSide + i) % 4;
+                if (!nodeList[cur_col + cur_row * GRID_WIDTH].walls[nextSide])
+                    break;
             }
+
+            direction = nextSide;
+            wallSide = (nextSide + di * 3) % 4;
+
+            int next_col = nextCol(cur_col, nextSide);
+            int next_row = nextRow(cur_row, nextSide);
+
+            nodeList[cur_col + cur_row * GRID_WIDTH].paths[nextSide] = true;
+            nodeList[next_col + next_row * GRID_WIDTH].paths[(nextSide + 2) % 4] = true;
+            nodeList[next_col + next_row * GRID_WIDTH].n_visited++;
+
+            cur_col = next_col;
+            cur_row = next_row;
         }
+
+        drawMaze(window, nodeList);
+        for (int col = 0; col < GRID_WIDTH; ++col)
+            for (int row = 0; row < GRID_HEIGHT; ++row)
+                drawNodePath(window, nodeList, col, row);
 
         // sf::sleep(sf::milliseconds(10));
         window.display();
@@ -111,7 +119,6 @@ int main()
 void drawNodePath(sf::RenderWindow &window, Node nodeList[], int col, int row)
 {
     Node* node = &(nodeList[col + row * GRID_WIDTH]);
-    //if (node->paths[0] || node->paths[1] || node->paths[2] || node->paths[3])
     if (node->n_visited > 0)
     {
         float scale = 0.6;
